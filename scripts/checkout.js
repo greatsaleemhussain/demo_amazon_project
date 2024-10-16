@@ -12,6 +12,7 @@ let cartSummaryHTML = '';
 
 cart.forEach((cartItem) => {
   const productId = cartItem.productId;
+
   let matchingProduct;
 
   products.forEach((product) => {
@@ -20,11 +21,26 @@ cart.forEach((cartItem) => {
     }
   });
 
+  const deliveryOptionId = cartItem.deliveryOptionId;
+
+  let deliveryOption = '';
+
+  deliveryOptions.forEach((option) => {
+    if (option.id === deliveryOptionId) {
+      deliveryOption = option;
+    }
+  });
+
+  const today = dayjs();
+  const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
+
+  const dateString = deliveryDate.format('dddd, MMMM D');
+
   cartSummaryHTML +=
     `
   <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
             <div class="delivery-date">
-              Delivery date: Tuesday, June 21
+              Delivery date: ${dateString}
             </div>
 
             <div class="cart-item-details-grid">
@@ -93,9 +109,10 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
                     </div>
                   </div>
                 </div>
-    `;
+    `
   });
   return html;
+
 }
 
 document.querySelector('.order-summary').innerHTML = cartSummaryHTML;
@@ -109,7 +126,5 @@ document.querySelectorAll('.js-delete-quantity-link').forEach((link) => {
       `.js-cart-item-container-${productId}`
     );
     container.remove();
-  }
-  );
+  });
 });
-
