@@ -7,12 +7,17 @@ import { loadProducts, loadProductsFetch } from '../data/products.js';
 import { loadCart } from '../data/cart.js';
 
 async function loadPage() {
-  await loadProductsFetch();
-  await new Promise((resolve) => {
-    loadCart(() => {
-      resolve();
+  try {
+
+    await loadProductsFetch();
+    await new Promise((resolve) => {
+      loadCart(() => {
+        resolve();
+      });
     });
-  });
+  } catch (error) {
+    console.log('error in checkout');
+  }
   renderOrderSummary();
   renderPaymentSummary();
   return 'value2';
