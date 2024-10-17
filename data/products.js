@@ -57,43 +57,28 @@ class Clothing extends Product {
   }
 }
 
-// const tshirt = new Clothing({
-//   id: "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
-//   image: "images/products/adults-plain-cotton-tshirt-2-pack-teal.jpg",
-//   name: "Adults Plain Cotton T-Shirt - 2 Pack",
-//   rating: {
-//     stars: 4.5,
-//     count: 56
-//   },
-//   priceCents: 799,
-//   keywords: [
-//     "tshirts",
-//     "apparel",
-//     "mens"
-//   ],
-//   type: "clothing",
-//   sizeChartLink: "images/clothing-size-chart.png"
-// });
-// console.log(tshirt);
-// const product1 = new Product({
-//   id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-//   image: "images/products/athletic-cotton-socks-6-pairs.jpg",
-//   name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
-//   rating: {
-//     stars: 4.5,
-//     count: 87
-//   },
-//   priceCents: 1090,
-//   keywords: [
-//     "socks",
-//     "sports",
-//     "apparel"
-//   ]
-// });
+export let products = [];
 
-// console.log(product1);
+export function loadProducts(fun) {
+  const xhr = new XMLHttpRequest();
 
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response).map((productDetails) => {
+      if (productDetails.type === 'clothing') {
+        return new Clothing(productDetails);
+      }
+      return new Product(productDetails);;
+    });
 
+    console.log('loading products');
+    fun();
+  });
+  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.send();
+}
+
+// loadProducts();
+/*
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -759,5 +744,5 @@ export const products = [
   }
   return new Product(productDetails);
 });
-
+*/
 // console.log(products);
